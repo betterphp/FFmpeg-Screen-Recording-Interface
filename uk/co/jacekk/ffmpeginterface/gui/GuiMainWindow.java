@@ -76,7 +76,7 @@ public class GuiMainWindow {
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints constraints = new GridBagConstraints();
 		
-		layout.columnWidths = new int[]{300};
+		layout.columnWidths = new int[]{200};
 		layout.rowHeights = new int[]{26};
 		
 		layout.setConstraints(this.timer, constraints);
@@ -105,7 +105,7 @@ public class GuiMainWindow {
 			rowHeights[i] = 22;
 		}
 		
-		layout.columnWidths = new int[]{100, 200};
+		layout.columnWidths = new int[]{100, 100};
 		layout.rowHeights = rowHeights;
 		
 		ArrayList<JLabel> toAdd = new ArrayList<JLabel>();
@@ -156,7 +156,7 @@ public class GuiMainWindow {
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		constraints.insets = new Insets(2, 2, 2, 2);
 		
-		layout.columnWidths = new int[]{300};
+		layout.columnWidths = new int[]{200};
 		layout.rowHeights = new int[]{36, 36};
 		
 		layout.setConstraints(this.recordButton, constraints);
