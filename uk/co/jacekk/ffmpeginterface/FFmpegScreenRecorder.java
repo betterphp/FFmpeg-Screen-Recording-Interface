@@ -11,6 +11,7 @@ public class FFmpegScreenRecorder {
 	
 	private Process proc;
 	private boolean recording;
+	private long recordingStartTime;
 	
 	public FFmpegScreenRecorder(){
 		this.params = new LinkedHashMap<String, String>();
@@ -22,6 +23,7 @@ public class FFmpegScreenRecorder {
 		this.params.put("Frame Rate", "30");
 		
 		this.recording = false;
+		this.recordingStartTime = 0L;
 	}
 	
 	public String getParam(String key){
@@ -60,6 +62,7 @@ public class FFmpegScreenRecorder {
 		}
 		
 		this.recording = true;
+		this.recordingStartTime = System.currentTimeMillis() / 1000L;
 	}
 	
 	public void stop() throws FFmpegException {
@@ -78,6 +81,10 @@ public class FFmpegScreenRecorder {
 	
 	public boolean isRecording(){
 		return this.recording;
+	}
+	
+	public long getRecordingDuration(){
+		return (System.currentTimeMillis() / 1000L) - this.recordingStartTime;
 	}
 	
 }

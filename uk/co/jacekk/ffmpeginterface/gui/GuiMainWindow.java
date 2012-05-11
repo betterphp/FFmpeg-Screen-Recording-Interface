@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Timer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -62,12 +63,14 @@ public class GuiMainWindow {
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.window.setLocation(screenSize.width / 2 - 400, screenSize.height / 2 - 300);
+		
+		(new Timer()).schedule(new GuiTimerUpdateTask(this, recorder), 0, 1000);
 	}
 	
 	private JPanel createTimerArea(){
 		JPanel area = new JPanel();
 		
-		this.timer = new JLabel("00:00:00.000");
+		this.timer = new JLabel("00:00:00");
 		this.timer.setFont(new Font("Sans-Serif", Font.BOLD, 16));
 		
 		GridBagLayout layout = new GridBagLayout();

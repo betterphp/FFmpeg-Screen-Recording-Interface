@@ -27,8 +27,8 @@ public class ToggleRecordingButtonMouseListener extends BaseActionListener imple
 				e.printStackTrace();
 			}
 			
-			window.timer.setText("00:00:00.000");
 			window.recordButton.setText("Start Recording");
+			window.selectWindowButton.setEnabled(true);
 		}else{
 			try{
 				recorder.start();
@@ -38,6 +38,7 @@ public class ToggleRecordingButtonMouseListener extends BaseActionListener imple
 			}
 			
 			window.recordButton.setText("Stop Recording");
+			window.selectWindowButton.setEnabled(false);
 		}
 	}
 
