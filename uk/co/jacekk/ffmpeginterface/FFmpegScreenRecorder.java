@@ -1,8 +1,11 @@
 package uk.co.jacekk.ffmpeginterface;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class FFmpegScreenRecorder {
@@ -37,23 +40,28 @@ public class FFmpegScreenRecorder {
 	}
 	
 	public void start() throws IOException, FFmpegException {
-		ProcessBuilder builder = new ProcessBuilder(Arrays.asList(
+		ProcessBuilder builder = new ProcessBuilder(
 			"ffmpeg",
 			"-y",
-			"-v 0",
-			"-f alsa",
-			"-ac 2",
-			"-i pulse",
-			"-f x11grab",
-			"-r " + this.getParam("Frame Rate"),
-			"-s " + this.getParam("Width") + "x" + this.getParam("Height"),
-			"-i :0.0+" + this.getParam("X") + "," + this.getParam("Y"),
-			"-acodec libmp3lame",
-			"-vcodec libx264",
-			"-vpre lossless_ultrafast",
-			"-threads 0",
-			System.getProperty("user.home") + "temp.mkv"
-		));
+			"-v", "quiet",
+			"-f", "alsa",
+			"-ac", "2",
+			"-i", "pulse",
+			"-f", "x11grab",
+			"-r", this.getParam("Frame Rate"),
+			"-s", this.getParam("Width") + "x" + this.getParam("Height"),
+			"-i", ":0.0+" + this.getParam("X") + "," + this.getParam("Y"),
+			"-acodec", "libmp3lame",
+			"-ab", "256k",
+			"-vcodec", "libx264",
+			"-preset", "ultrafast",
+			"-crf", "0",
+			"-threads", "0",
+			System.getProperty("user.home") + File.separator + "temp.mkv"
+		);
+		
+		builder.directory(new File(System.getProperty("user.home")));
+		builder.redirectErrorStream(true);
 		
 		this.proc = builder.start();
 		
@@ -70,7 +78,7 @@ public class FFmpegScreenRecorder {
 			Field field = this.proc.getClass().getDeclaredField("pid");
 			field.setAccessible(true);
 			
-			Runtime.getRuntime().exec("kill -2 " + (Integer) field.get(this.proc));
+			Runtime.getRuntime().exec("kill -2 " + (Integer) field.get(this.proc)).waitFor();
 		}catch (Exception e){
 			this.proc.destroy();
 			throw new FFmpegException("Can't cleanly kill ffmpeg, using a bad way instead");
