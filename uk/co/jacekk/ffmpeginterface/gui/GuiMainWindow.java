@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -13,6 +14,7 @@ import java.util.Timer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -194,6 +196,21 @@ public class GuiMainWindow {
 		content.add(timerArea);
 		content.add(statusArea);
 		content.add(buttonArea);
+	}
+	
+	public void showSaveRecording(){
+		JFileChooser chooser = new JFileChooser();
+		
+		chooser.showSaveDialog(this.window);
+		
+		File tempFile = new File(this.recorder.getTempFileName());
+		File destFile = chooser.getSelectedFile();
+		
+		if (destFile == null){
+			tempFile.delete();
+		}else{
+			tempFile.renameTo(destFile);
+		}
 	}
 	
 	public void updateStatus(){

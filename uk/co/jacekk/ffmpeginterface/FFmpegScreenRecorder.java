@@ -95,4 +95,8 @@ public class FFmpegScreenRecorder {
 		return (System.currentTimeMillis() / 1000L) - this.recordingStartTime;
 	}
 	
+	public String getTempFileName(){
+		return this.recordingFileName;
+	}
+	
 }

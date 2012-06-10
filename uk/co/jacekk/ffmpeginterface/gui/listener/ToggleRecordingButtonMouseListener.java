@@ -22,6 +22,7 @@ public class ToggleRecordingButtonMouseListener extends BaseActionListener imple
 		if (recorder.isRecording()){
 			try{
 				recorder.stop();
+				this.window.showSaveRecording();
 			}catch (FFmpegException e){
 				window.alert(e.getMessage());
 				e.printStackTrace();
