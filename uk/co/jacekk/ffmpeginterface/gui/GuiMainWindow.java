@@ -204,12 +204,14 @@ public class GuiMainWindow {
 		chooser.showSaveDialog(this.window);
 		
 		File tempFile = new File(this.recorder.getTempFileName());
+		File logFile = new File(this.recorder.getLogFileName());
 		File destFile = chooser.getSelectedFile();
 		
 		if (destFile == null){
 			tempFile.delete();
 		}else{
 			tempFile.renameTo(destFile);
+			logFile.delete();
 		}
 	}
 	

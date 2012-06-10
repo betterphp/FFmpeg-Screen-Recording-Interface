@@ -1,6 +1,7 @@
 package uk.co.jacekk.ffmpeginterface;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -13,6 +14,7 @@ public class FFmpegScreenRecorder {
 	private boolean recording;
 	private long recordingStartTime;
 	private String recordingFileName;
+	private String ffmpegLogFileName;
 	
 	public FFmpegScreenRecorder(){
 		this.params = new LinkedHashMap<String, String>();
@@ -40,11 +42,12 @@ public class FFmpegScreenRecorder {
 	public void start() throws IOException, FFmpegException {
 		this.recordingStartTime = System.currentTimeMillis() / 1000L;
 		this.recordingFileName = System.getProperty("user.home") + File.separator + "recording" + this.recordingStartTime + ".mkv";
+		this.ffmpegLogFileName = System.getProperty("user.home") + File.separator + "recording" + this.recordingStartTime + ".log";
 		
 		ProcessBuilder builder = new ProcessBuilder(
 			"ffmpeg",
 			"-y",
-			"-v", "quiet",
+		//	"-v", "quiet",
 			"-f", "alsa",
 			"-ac", "2",
 			"-i", "pulse",
@@ -66,6 +69,8 @@ public class FFmpegScreenRecorder {
 		
 		this.proc = builder.start();
 		
+		new CopyInputStreamThread(this.proc.getInputStream(), new FileOutputStream(new File(this.ffmpegLogFileName))).start();
+		
 		if (this.proc == null){
 			throw new FFmpegException("Failed to execute ffmpeg");
 		}
@@ -84,6 +89,13 @@ public class FFmpegScreenRecorder {
 			throw new FFmpegException("Can't cleanly kill ffmpeg, using a bad way instead");
 		}
 		
+		try{
+			this.proc.waitFor();
+			Thread.sleep(100L);
+		}catch (InterruptedException e){
+			e.printStackTrace();
+		}
+		
 		this.recording = false;
 	}
 	
@@ -97,6 +109,10 @@ public class FFmpegScreenRecorder {
 	
 	public String getTempFileName(){
 		return this.recordingFileName;
+	}
+	
+	public String getLogFileName(){
+		return this.ffmpegLogFileName;
 	}
 	
 }
