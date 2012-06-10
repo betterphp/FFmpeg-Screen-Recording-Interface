@@ -1,10 +1,7 @@
 package uk.co.jacekk.ffmpeginterface;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 
@@ -15,6 +12,7 @@ public class FFmpegScreenRecorder {
 	private Process proc;
 	private boolean recording;
 	private long recordingStartTime;
+	private String recordingFileName;
 	
 	public FFmpegScreenRecorder(){
 		this.params = new LinkedHashMap<String, String>();
@@ -40,6 +38,9 @@ public class FFmpegScreenRecorder {
 	}
 	
 	public void start() throws IOException, FFmpegException {
+		this.recordingStartTime = System.currentTimeMillis() / 1000L;
+		this.recordingFileName = System.getProperty("user.home") + File.separator + "recording" + this.recordingStartTime + ".mkv";
+		
 		ProcessBuilder builder = new ProcessBuilder(
 			"ffmpeg",
 			"-y",
@@ -57,7 +58,7 @@ public class FFmpegScreenRecorder {
 			"-preset", "ultrafast",
 			"-crf", "0",
 			"-threads", "0",
-			System.getProperty("user.home") + File.separator + "temp.mkv"
+			this.recordingFileName
 		);
 		
 		builder.directory(new File(System.getProperty("user.home")));
@@ -70,7 +71,6 @@ public class FFmpegScreenRecorder {
 		}
 		
 		this.recording = true;
-		this.recordingStartTime = System.currentTimeMillis() / 1000L;
 	}
 	
 	public void stop() throws FFmpegException {
